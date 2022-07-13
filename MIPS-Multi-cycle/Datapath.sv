@@ -25,12 +25,12 @@ module Datapath(input clk , rst , RegDst , RegWrite , MemRead , MemWrite , pcwri
     assign opcode = IR_out[15:12];
     assign func = IR_out[8:0];
     pc pc1(clk , temp , pcwrite , pcwritecond , zero , pc_input , pc_output);
-    mux2 #(16) IorDMux(pc_output , {4'b0 , IR_out[11:0]} , IorD , IorD_Mux_output);                                                //Multiplexing between the Data from the instruction or the pc counter address
+    mux2 #(16) IorDMux(pc_output , {4'b0 , IR_out[11:0]} , IorD , IorD_Mux_output);                                                	//Multiplexing between the Data from the instruction or the pc counter address
     Nreg #(16) IR(DataMem_out , clk , rst , LRwrite , IR_out);
     Nreg #(16) MDR(DataMem_out , clk , rst , 1 , MDR_out);
     DataMem datamem(clk , MemWrite , MemRead, IorD_Mux_output , Areg_out , DataMem_out);
     mux2 #(3) address_mux(3'd0 , IR_out[11:9] , RegDst , address_mux_output);
-    mux4 #(16) register_file_input_muxed(ALU_reg_output , Areg_out , Breg_out , MDR_out , RegDataSel , write_data_in);      // Write Mux
+    mux4 #(16) register_file_input_muxed(ALU_reg_output , Areg_out , Breg_out , MDR_out , RegDataSel , write_data_in);
     RegisterFile regfile (clk , rst , RegWrite , 0 , IR_out[11:9] , address_mux_output , write_data_in , Areg_in , Breg_in);
     Nreg #(16) Areg(Areg_in , clk , rst , 1 , Areg_out);
     Nreg #(16) Breg(Breg_in , clk , rst , 1 , Breg_out);
